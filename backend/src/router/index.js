@@ -6,6 +6,11 @@ import RequestPassword from "../views/RequestPassword.vue";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
 import NotFound from "../views/NotFound.vue";
+import Products from "../views/Products/Products.vue";
+import Users from "../views/Users/Users.vue";
+import Customers from "../views/Customers/Customers.vue";
+import Orders from "../views/Orders/Orders.vue";
+import Report from "../views/Reports/Report.vue";
 
 
 const routes = [
@@ -24,6 +29,35 @@ const routes = [
                 name: 'app.dashboard',
                 component: Dashboard
             },
+            {
+                path: 'products',
+                name: 'app.products',
+                component: Products
+            },
+            {
+                path: 'users',
+                name: 'app.users',
+                component: Users
+            },
+            {
+                path: 'customers',
+                name: 'app.customers',
+                component: Customers
+            },
+            {
+                path: 'orders',
+                name: 'app.orders',
+                component: Orders
+            },
+            {
+                path: '/report',
+                name: 'reports',
+                component: Report,
+                meta:{
+                    requiresAuth:true
+                }
+            },
+
           
         ]      
     },
