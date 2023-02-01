@@ -12,6 +12,7 @@ const routes = [
     {
         path:'/app',
         name: 'app',
+        redirect:'/app/dashboard',
         component: AppLayout,
 
         meta:{
@@ -23,11 +24,7 @@ const routes = [
                 name: 'app.dashboard',
                 component: Dashboard
             },
-            // {
-            //     path: '/products',
-            //     name: 'app.products',
-            //     component: Products
-            // },
+          
         ]      
     },
     
@@ -40,7 +37,7 @@ const routes = [
         }
     },
     {
-        path: '/reset-password',
+        path: '/reset-password/:token',
         name: 'reset-password',
         component: ResetPassword,
         meta: {
@@ -49,7 +46,7 @@ const routes = [
     },
     {
         path: '/request-password',
-        name: 'request-password',
+        name: 'requestPassword',
         component: RequestPassword,
         meta: {
             requiresGuest: true
