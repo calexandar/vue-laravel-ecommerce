@@ -7,8 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\ProductListResource;
 
 class ProductController extends Controller
@@ -28,7 +30,7 @@ class ProductController extends Controller
         $query = Product::query()
                     ->where('title', 'like', "%{$search}%")
                     ->orderBy($sortField, $sortDirection)
-                    ->paginate($perPage)
+                    ->paginate($perPage);
 
         return ProductListResource::collection($query);            
     }
