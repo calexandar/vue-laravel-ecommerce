@@ -48,7 +48,7 @@
                         {{ product.title }}
                     </td>
                     <td class="border-b p-2">
-                        {{ product.price }}
+                        {{ $filters.currencyUSD(product.price) }}
                     </td>
                     <td class="border-b p-2">
                         {{ product.updated_at }}
@@ -79,6 +79,7 @@
                                                     active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                                                     'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                 ]"
+                                                @click="editProduct(product)"
                                             >
                                                 <PencilSquareIcon
                                                     :active="active"
@@ -94,6 +95,7 @@
                                                     active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                                                     'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                 ]"
+                                                @click="deleteProduct(product)"
                                             >
                                                 <TrashIcon
                                                     :active="active"
@@ -123,15 +125,36 @@ import { EllipsisVerticalIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vu
 
 
 const products = computed(()=> store.state.products);
+const showProductModal = ref(false);
+const emit = defineEmits(['clickEdit'])
 
 onMounted(()=>{
     getProducts();
+//needs more fields for search
 })
 
 function getProducts(url=null) {
     store.dispatch("getProducts", {
         url,
     });
+}
+
+function showAddNewModal(){
+    showProductModal.value = true;
+}
+
+function deleteProduct(product) {
+    if (!confirm(`Are you sure you want to delete this product?`)) {
+        return
+    }
+    store.dispatch('deleteProduct', product.id)
+        .then(res => {
+            store.dispatch('getProducts')
+        })
+}
+
+function editProduct(p) {
+    emit('clickEdit', p)
 }
 </script>
 

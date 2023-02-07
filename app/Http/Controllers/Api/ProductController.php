@@ -101,7 +101,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product       $product
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductStoreRequest $request, $product)
+    public function update(ProductStoreRequest $request,Product $product)
     {
         $data = $request->validated();
         $data['updated_by'] = $request->user()->id;
