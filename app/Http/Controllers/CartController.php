@@ -117,6 +117,8 @@ class CartController extends Controller
             return response(['count' => Cart::getCountFromItems($cartItems)]);
         }
     }
+
+
         
     
 }
