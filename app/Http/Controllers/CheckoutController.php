@@ -33,13 +33,39 @@ class CheckoutController extends Controller
         $checkout_session = $stripe->checkout->sessions->create([
             'line_items' => $line_items,
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8000/success',
-            'cancel_url' => 'http://localhost:8000/cancel',
+            'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' =>  route('checkout.failure', [], true),
           ]);
           
-        //   header("HTTP/1.1 303 See Other");
-        //   header("Location: " . $checkout_session->url);
+          // dd($checkout_session->id);
 
         return redirect($checkout_session->url);
+    }
+
+    public function success(Request $request  )
+    {
+      $stripe = new StripeClient(getenv('STRIPE_SECRET_KEY'));
+
+      try {
+        $session = $stripe->checkout->sessions->retrieve($_GET['session_id']);
+        if(!$session){
+          return view('checkout.failure');
+        }
+        return view('checkout.success');
+
+      } catch (\Exception $e) {
+        
+        return view('checkout.failure');
+      }
+ 
+
+
+     
+    }
+
+    public function failure(Request $request)
+    {
+      
+      dd($request->all());
     }
 }
