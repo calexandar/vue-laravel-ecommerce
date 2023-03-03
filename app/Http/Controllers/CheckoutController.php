@@ -169,4 +169,63 @@ class CheckoutController extends Controller
 
       return redirect($session->url);
     }
+
+    public function webhook()
+    {
+      \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
+
+      $endpoint_secret = 'whsec_5341ef387b4ae1ce00ee9539d9ef4c39fec56bd3d26ba61905cba65601834e75';
+
+      $payload = @file_get_contents('php://input');
+      $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+      $event = null;
+
+      try {
+        $event = \Stripe\Webhook::constructEvent(
+          $payload, $sig_header, $endpoint_secret
+        );
+      } catch(\UnexpectedValueException $e) {
+        // Invalid payload
+       return response('',401);
+        
+      } catch(\Stripe\Exception\SignatureVerificationException $e) {
+        // Invalid signature
+       return response('',402);
+        
+      }
+
+      // Handle the event
+      switch ($event->type) {
+        case 'checkout.session.completed':
+          $paymentIntent = $event->data->object;
+          $session_id = $paymentIntent['id'];
+
+          $payment = Payment::query()
+                    ->where([
+                        'session_id' => $session_id,
+                        'status' => PaymentStatus::Pending
+                    ])
+                    ->first();                     
+
+          if($payment){
+            $this->updateOrderAndSession($payment);
+          }
+
+        default:
+          echo 'Received unknown event type ' . $event->type;
+      }
+
+      return response('', 200);
+      
+    }
+
+    private function updateOrderAndSession(Payment $payment)
+    {
+      $payment->status = PaymentStatus::Paid->value;
+      $payment->update();
+
+      $order = $payment->order;
+      $order->status = OrderStatus::Paid->value;
+      $order->update();
+    }
 }
