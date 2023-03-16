@@ -11,6 +11,7 @@ import Users from "../views/Users/Users.vue";
 import Customers from "../views/Customers/Customers.vue";
 import Orders from "../views/Orders/Orders.vue";
 import Report from "../views/Reports/Report.vue";
+import OrderView from "../views/Orders/OrderView.vue";
 
 
 const routes = [
@@ -44,11 +45,17 @@ const routes = [
                 name: 'app.customers',
                 component: Customers
             },
+
             {
                 path: 'orders',
                 name: 'app.orders',
                 component: Orders
             },
+            {
+                path: 'orders/:id',
+                name: 'app.orders.view',
+                component: OrderView
+              },
             {
                 path: '/report',
                 name: 'reports',

@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-
+        @include('cookie-consent::index')
         @include('layouts.navigation')
 
         <!-- Page Content -->
